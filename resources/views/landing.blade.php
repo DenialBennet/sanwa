@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Sanwa Antar Nusa — Ekspedisi & Logistik Nasional</title>
     <meta name="description" content="PT Sanwa Antar Nusa — jasa ekspedisi dan logistik nasional: kargo laut dan pengiriman darat ke seluruh Indonesia.">
+    <meta name="google-site-verification" content="googleb1b74ce866d282db" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
