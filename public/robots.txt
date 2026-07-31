@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /sanwa-internal-portal
+
+Sitemap: https://sanwaantarnusa.com/sitemap.xml
