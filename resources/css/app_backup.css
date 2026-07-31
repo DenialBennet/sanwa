@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-body text-neutral-text-primary bg-neutral-bg antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-heading font-semibold text-sm transition-all duration-200;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-white shadow-cta hover:bg-accent-dark hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply btn border border-white/40 text-white hover:bg-white/10;
+  }
+  .btn-primary-outline {
+    @apply btn border border-primary text-primary hover:bg-primary hover:text-white;
+  }
+  .section-eyebrow {
+    @apply inline-block rounded-full bg-accent-light text-accent-dark text-xs font-heading font-semibold tracking-wide uppercase px-4 py-1.5;
+  }
+  .card-soft {
+    @apply bg-white rounded-2xl shadow-soft;
+  }
+}
+
+/* Scroll reveal animations */
+.reveal-on-scroll,
+.reveal-immediate {
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Directional translates */
+.reveal-up {
+  transform: translateY(3rem);
+}
+.reveal-down {
+  transform: translateY(-3rem);
+}
+.reveal-left {
+  transform: translateX(-3rem);
+}
+.reveal-right {
+  transform: translateX(3rem);
+}
+.reveal-scale {
+  transform: scale(0.95);
+}
+
+/* Active state for reveals */
+.reveal-on-scroll.active,
+.reveal-immediate.active {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Custom staggered transition delays */
+.delay-75 { transition-delay: 75ms; }
+.delay-100 { transition-delay: 100ms; }
+.delay-150 { transition-delay: 150ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
+.delay-700 { transition-delay: 700ms; }
+
+
