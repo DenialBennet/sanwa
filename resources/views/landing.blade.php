@@ -7,6 +7,13 @@
     <meta name="description" content="PT Sanwa Antar Nusa — jasa ekspedisi dan logistik nasional: kargo laut dan pengiriman darat ke seluruh Indonesia.">
     <meta name="google-site-verification" content="googleb1b74ce866d282db" />
 
+    <!-- Favicon / Profile Icon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
