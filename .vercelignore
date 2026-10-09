@@ -1,0 +1,15 @@
+legacy
+vendor
+bootstrap
+scripts
+tests-next
+tests-e2e
+test-results
+playwright-report
+playwright.config.ts
+exports
+public/build
+public/hot
+.env
+.env.*
+*.sqlite

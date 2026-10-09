@@ -1,0 +1,13 @@
+import {DatabaseSync} from 'node:sqlite';
+import {existsSync,mkdirSync,writeFileSync} from 'node:fs';
+const filename=process.argv[2] || 'legacy/laravel/database/database.sqlite';
+if(!existsSync(filename)) throw Error(`Database tidak ditemukan: ${filename}. Berikan path SQLite sebagai argumen.`);
+const db=new DatabaseSync(filename,{readOnly:true});
+const rows=db.prepare('select * from vessel_schedules order by id').all();
+const quote=value=>"'"+String(value).replaceAll("'","''")+"'";
+const timestamp=value=>quote(String(value).replace(' ','T')+'+07:00');
+const sql=['begin;',...rows.map(row=>`insert into public.vessel_schedules (id,kapal,voy,closing,etd_sub,is_full,created_at,updated_at) values (${Number(row.id)},${quote(row.kapal)},${quote(row.voy)},${timestamp(row.closing)},${quote(String(row.etd_sub).slice(0,10))},${row.is_full?'true':'false'},${timestamp(row.created_at)},${timestamp(row.updated_at)}) on conflict (id) do nothing;`),"select setval(pg_get_serial_sequence('public.vessel_schedules','id'), coalesce((select max(id) from public.vessel_schedules),1), exists(select 1 from public.vessel_schedules));",'commit;'];
+db.close();
+mkdirSync('exports',{recursive:true});
+writeFileSync('exports/schedules.sql',sql.join('\n')+'\n');
+console.log(`${rows.length} jadwal diekspor ke exports/schedules.sql. Tidak ada akun atau password.`);

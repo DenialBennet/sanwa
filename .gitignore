@@ -25,3 +25,15 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/.next/
+/out/
+/.vercel/
+.env*
+!.env.example
+*.tsbuildinfo
+/exports/
+/test-results/
+/playwright-report/
+/legacy/laravel/storage/logs/
+/legacy/laravel/storage/framework/
+/legacy/laravel/bootstrap/cache/*.php

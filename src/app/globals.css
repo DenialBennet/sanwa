@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] { display: none !important; }
+.field { @apply block w-full mt-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500; }
+button:disabled { opacity: .6; cursor: wait; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .reveal-on-scroll, .reveal-immediate { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-body text-[#1F2328] bg-white antialiased selection:bg-[#EF2029] selection:text-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-heading font-semibold text-sm transition-all duration-300;
+  }
+  .btn-accent {
+    @apply btn bg-[#EF2029] text-white shadow-lg shadow-[#EF2029]/25 hover:bg-[#C8161E] hover:scale-[1.02] active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn bg-[#0D1D30]/80 border border-white/20 text-white hover:bg-[#0D1D30] hover:border-white/40 hover:scale-[1.02] active:scale-[0.98];
+  }
+  .section-eyebrow {
+    @apply inline-block rounded-full bg-[#EF2029]/15 text-[#EF2029] text-xs font-heading font-bold tracking-widest uppercase px-4 py-1.5 border border-[#EF2029]/30;
+  }
+}
+
+/* Scroll reveal animations */
+.reveal-on-scroll,
+.reveal-immediate {
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Directional translates */
+.reveal-up {
+  transform: translateY(3rem);
+}
+.reveal-down {
+  transform: translateY(-3rem);
+}
+.reveal-left {
+  transform: translateX(-3rem);
+}
+.reveal-right {
+  transform: translateX(3rem);
+}
+.reveal-scale {
+  transform: scale(0.95);
+}
+
+/* Active state for reveals */
+.reveal-on-scroll.active,
+.reveal-immediate.active {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Custom staggered transition delays */
+.delay-75 { transition-delay: 75ms; }
+.delay-100 { transition-delay: 100ms; }
+.delay-150 { transition-delay: 150ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
+.delay-700 { transition-delay: 700ms; }
+
+/* Shipping flow animated path */
+@keyframes flow-route {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+.animate-flow-route {
+  stroke-dashoffset: 0;
+  animation: flow-route 4s linear infinite;
+}
+
+@layer utilities {
+  .border-l-active-red {
+    border-left-color: #E31E24 !important;
+  }
+  .border-l-inactive-gray {
+    border-left-color: #E5E7EB !important;
+  }
+}

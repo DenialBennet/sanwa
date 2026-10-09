@@ -1,58 +1,99 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PT Sanwa Antar Nusa — Next.js + Supabase
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi sekarang berjalan dengan Next.js App Router, React, TypeScript, dan database PostgreSQL Supabase. Vercel menjalankan Next.js tanpa PHP atau Composer. Landing page memakai konten HTML lokal dengan interaksi Alpine yang dibundel lewat npm; data jadwal dan panel admin menggunakan React/Next.js.
 
-## About Laravel
+## Jalankan lokal
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Gunakan Node.js 22.13 atau lebih baru.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+npm ci
+copy .env.example .env.local
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Isi `.env.local` dengan URL project dan **publishable key** dari Supabase → Project Settings → API. Publishable key boleh digunakan aplikasi; akses data dibatasi RLS. Aplikasi ini tidak membutuhkan `service_role` atau secret key.
 
-## Contributing
+Buka http://localhost:3000. Tanpa konfigurasi Supabase, halaman publik tetap terbuka dan menampilkan pesan bahwa jadwal belum tersedia.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Siapkan Supabase gratis
 
-## Code of Conduct
+1. Buat project di https://supabase.com, pilih region terdekat seperti Singapore.
+2. Buka SQL Editor. Jalankan isi `supabase/migrations/202610090001_initial.sql` **sekali** pada project baru. Ini membuat tabel jadwal, daftar admin, indeks, dan kebijakan RLS.
+3. Di Authentication → Providers → Email, nonaktifkan pendaftaran akun publik (Allow new users to sign up). Tidak ada halaman signup di aplikasi.
+4. Di Authentication → Users → Add user, buat akun admin dengan email dan password sendiri. Konfirmasi email akun tersebut.
+5. Daftarkan akun tersebut sebagai admin melalui SQL Editor:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```sql
+insert into public.admin_users (user_id)
+select id from auth.users where email = 'EMAIL_ADMIN_KAMU'
+on conflict do nothing;
+```
 
-## Security Vulnerabilities
+6. Isi dua environment variables Supabase di `.env.local`.
+7. Buka `/sanwa-internal-portal/login`, masuk, lalu tambah jadwal.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Jangan memakai akun demo Laravel untuk produksi. Password Laravel tidak otomatis dipindahkan; akun admin baru dikelola Supabase Auth. Login memakai pembatasan percobaan bawaan Supabase Auth. Pengguna biasa tidak dapat mengubah jadwal, sekalipun mengakses REST API Supabase langsung.
 
-## License
+## Pindahkan jadwal lama
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Sumber Laravel dan perubahan lokal pada `DatabaseSeeder.php` disimpan di `legacy/laravel/`. Folder ini tidak dibutuhkan saat deploy. Beberapa folder cache Laravel yang terkunci masih ada di root lokal dan juga tersalin di arsip.
+
+Database SQLite lokal dibaca tanpa dimodifikasi:
+
+```sh
+node scripts/export-sqlite.mjs
+```
+
+Jika database berada di lokasi lain:
+
+```sh
+node scripts/export-sqlite.mjs PATH_KE_DATABASE.sqlite
+```
+
+Jalankan SQL hasilnya di `exports/schedules.sql` melalui Supabase SQL Editor, sesudah migration. Export mempertahankan ID dan status FULL; ID yang sudah ada dilewati agar tidak menimpa data baru. File export diabaikan Git dan Vercel. Script hanya memindahkan jadwal, tanpa akun dan password. Export lokal saat migrasi berisi 7 jadwal.
+
+**Asumsi waktu import:** tanggal/jam closing database lama dibaca sebagai WIB (`+07:00`). Periksa sebelum import jika instalasi lama menyimpan UTC. Input admin baru selalu berlabel WIB dan disimpan sebagai `timestamptz`. Jadwal publik menampilkan bulan sebelumnya dan bulan berjalan sesuai Asia/Jakarta; jadwal lama di luar periode tetap dapat dicari di admin.
+
+## Deploy ke Vercel
+
+1. Push repository ke GitHub.
+2. Vercel → Add New → Project → import repository tersebut.
+3. Framework Preset: **Next.js**. Root Directory: root repository. Build Command: `npm run build`. Output Directory: default Next.js. Node.js: 22.x atau 24.x.
+4. Tambahkan environment variables untuk Production dan Preview:
+
+| Variable | Nilai |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL project Supabase |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key Supabase |
+| `ADMIN_PATH` | `sanwa-internal-portal` atau satu segmen URL lain |
+
+5. Deploy. Jika mengubah environment variables, redeploy agar perubahan masuk ke build.
+6. Di Supabase → Authentication → URL Configuration, isi Site URL dengan domain produksi. Tambahkan localhost sebagai redirect URL bila diperlukan. Login aplikasi saat ini menggunakan email/password, bukan OAuth.
+7. Uji login admin, tambah/edit/hapus jadwal, filter, logout, serta tampilan mobile dan publik. Pastikan akun non-admin tidak dapat mengubah jadwal.
+
+Tidak perlu `vercel.json`, PHP runtime, `artisan migrate`, atau database di Vercel. `.vercelignore` mengecualikan arsip Laravel, vendor, data lokal, dan export.
+
+## Fitur dan pemeriksaan
+
+- Landing page, gambar, kontak WhatsApp, FAQ, menu mobile, dan interaksi layanan dipertahankan.
+- Supabase Auth untuk login/logout admin. Keanggotaan admin diperiksa di server dan melalui RLS database.
+- Tambah, edit, hapus, status FULL/CLOSED/AVAILABLE, filter kapal/tanggal/status, serta pagination 50 jadwal.
+- Validasi server untuk tanggal, panjang input, dan closing sebelum keberangkatan.
+- Endpoint kontak Laravel sebelumnya tidak menyimpan/mengirim pesan; landing page tetap memakai tautan kontak WhatsApp.
+
+```sh
+npm test
+npm run typecheck
+npm run build
+```
+
+Tes browser menggunakan Playwright Chromium (`npx playwright install chromium`, lalu `npm run test:e2e` setelah build). Untuk memakai Chrome yang sudah terpasang, isi `CHROME_PATH` dengan path executable Chrome. Tes fallback database dijalankan tanpa environment Supabase; tes ini tidak menguji database live. Screenshot disimpan lokal di `exports/`.
+
+Audit runtime (`npm audit --omit=dev`) bersih saat migrasi. Audit lengkap masih melaporkan 7 temuan pada dependency build Tailwind CSS 3; perbaikan yang ditawarkan membutuhkan migrasi mayor Tailwind CSS 4.
+
+Koneksi lokal ke Supabase sudah dikonfigurasi dan akses baca publik tabel jadwal sudah diverifikasi (HTTP 200). Akun admin juga sudah terdaftar. Pengujian login dan perubahan jadwal dilakukan sesudah login admin; build sendiri tidak otomatis menerbitkan situs.
+
+## Mengapa Supabase
+
+Supabase menyediakan PostgreSQL yang cocok dengan tabel dan relasi aplikasi lama, serta Auth dan RLS. Convex juga memiliki paket gratis, tetapi model backend dan query-nya memerlukan penulisan ulang yang lebih jauh. Supabase Free saat pengecekan menyediakan database 500 MB; paket gratis memiliki batas pemakaian dan project dapat dijeda karena tidak aktif. Lihat https://supabase.com/pricing dan https://www.convex.dev/pricing untuk batas terbaru.
