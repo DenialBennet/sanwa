@@ -2,6 +2,26 @@
 
 Aplikasi sekarang berjalan dengan Next.js App Router, React, TypeScript, dan database PostgreSQL Supabase. Vercel menjalankan Next.js tanpa PHP atau Composer. Landing page memakai konten HTML lokal dengan interaksi Alpine yang dibundel lewat npm; data jadwal dan panel admin menggunakan React/Next.js.
 
+## Status deployment
+
+- Production aktif: https://sanwa-three.vercel.app
+- Login admin: https://sanwa-three.vercel.app/sanwa-internal-portal/login
+- Project Vercel: https://vercel.com/daniel-bennet/sanwa
+- Repository: https://github.com/PHANTAHT/sanwa, branch `main`; perubahan yang dipush akan dideploy otomatis.
+- Tujuh jadwal lama sudah diimpor ke Supabase. Jadwal Juni–Juli tidak tampil pada periode publik September–Oktober; seluruhnya tetap tersedia di admin.
+- `sanwaantarnusa.com` sudah ditambahkan ke Production; `www.sanwaantarnusa.com` diatur redirect permanen (308) ke domain utama. Keduanya masih menunggu perubahan DNS pada penyedia domain.
+
+Record yang diminta dashboard Vercel:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `216.198.79.1` |
+| CNAME | `www` | `0db98c85e8fd359b.vercel-dns-017.com.` |
+
+Nameserver saat diperiksa: `bromo.cloudhost.id` dan `rinjani.cloudhost.id`. Record MX masih mengarah ke `sanwaantarnusa.com` sendiri, sehingga penggunaan email domain perlu diperiksa sebelum record A diubah. Panel DNS belum diakses saat deployment awal.
+
+Supabase Auth Site URL sementara memakai alamat Vercel yang sudah aktif; redirect domain utama, www, dan localhost sudah terdaftar. Setelah DNS dan HTTPS domain utama valid, ubah Site URL menjadi `https://sanwaantarnusa.com`.
+
 ## Jalankan lokal
 
 Gunakan Node.js 22.13 atau lebih baru.
@@ -14,7 +34,8 @@ npm run dev
 
 Isi `.env.local` dengan URL project dan **publishable key** dari Supabase → Project Settings → API. Publishable key boleh digunakan aplikasi; akses data dibatasi RLS. Aplikasi ini tidak membutuhkan `service_role` atau secret key.
 
-Buka http://localhost:3000. Tanpa konfigurasi Supabase, halaman publik tetap terbuka dan menampilkan pesan bahwa jadwal belum tersedia.
+Buka 
+. Tanpa konfigurasi Supabase, halaman publik tetap terbuka dan menampilkan pesan bahwa jadwal belum tersedia.
 
 ## Siapkan Supabase gratis
 
