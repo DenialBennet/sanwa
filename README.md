@@ -4,23 +4,24 @@ Aplikasi sekarang berjalan dengan Next.js App Router, React, TypeScript, dan dat
 
 ## Status deployment
 
-- Production aktif: https://sanwa-three.vercel.app
-- Login admin: https://sanwa-three.vercel.app/sanwa-internal-portal/login
+- Production aktif: https://sanwaantarnusa.com
+- Alamat Vercel: https://sanwa-three.vercel.app
+- Login admin: https://sanwaantarnusa.com/sanwa-internal-portal/login
 - Project Vercel: https://vercel.com/daniel-bennet/sanwa
 - Repository: https://github.com/PHANTAHT/sanwa, branch `main`; perubahan yang dipush akan dideploy otomatis.
 - Tujuh jadwal lama sudah diimpor ke Supabase. Jadwal Juni–Juli tidak tampil pada periode publik September–Oktober; seluruhnya tetap tersedia di admin.
-- `sanwaantarnusa.com` sudah ditambahkan ke Production; `www.sanwaantarnusa.com` diatur redirect permanen (308) ke domain utama. Keduanya masih menunggu perubahan DNS pada penyedia domain.
+- `sanwaantarnusa.com` aktif dengan HTTPS; `www.sanwaantarnusa.com` mengarah permanen (308) ke domain utama. Keduanya berstatus Valid Configuration di Vercel.
 
-Record yang diminta dashboard Vercel:
+Record DNS yang tersimpan di IDCloudHost pada 10 Oktober 2026:
 
 | Type | Name | Value |
 | --- | --- | --- |
 | A | `@` | `216.198.79.1` |
 | CNAME | `www` | `0db98c85e8fd359b.vercel-dns-017.com.` |
 
-Nameserver saat diperiksa: `bromo.cloudhost.id` dan `rinjani.cloudhost.id`. Record MX masih mengarah ke `sanwaantarnusa.com` sendiri, sehingga penggunaan email domain perlu diperiksa sebelum record A diubah. Panel DNS belum diakses saat deployment awal.
+Nameserver: `bromo.cloudhost.id` dan `rinjani.cloudhost.id`. Pemilik mengonfirmasi tidak menggunakan email domain. Record A dan CNAME www sudah diperbarui; record lainnya tetap.
 
-Supabase Auth Site URL sementara memakai alamat Vercel yang sudah aktif; redirect domain utama, www, dan localhost sudah terdaftar. Setelah DNS dan HTTPS domain utama valid, ubah Site URL menjadi `https://sanwaantarnusa.com`.
+Supabase Auth Site URL sudah memakai `https://sanwaantarnusa.com`; redirect domain utama, www, dan localhost terdaftar. Pemeriksaan produksi berhasil: halaman publik HTTP 200 membaca Supabase, dan akses admin tanpa login dialihkan ke halaman login.
 
 ## Jalankan lokal
 
