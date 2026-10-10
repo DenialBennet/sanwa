@@ -13,7 +13,11 @@ export default async function Home() {
       const {start,end}=monthRange();
       const result=await db.from('vessel_schedules').select('*').gte('etd_sub',start).lte('etd_sub',end).order('etd_sub');
       if(result.error) throw result.error;
-      schedules=result.data || [];
+      // Newer month first; within each month, earliest departure first.
+      schedules=(result.data || []).sort((a,b)=>
+        b.etd_sub.slice(0,7).localeCompare(a.etd_sub.slice(0,7)) ||
+        a.etd_sub.localeCompare(b.etd_sub) || a.id-b.id
+      );
     } catch {error='Jadwal sementara tidak tersedia. Silakan hubungi tim kami.';}
   } else error='Jadwal sementara tidak tersedia. Silakan hubungi tim kami.';
   // Trusted repository content only. No visitor input is inserted into this markup.
