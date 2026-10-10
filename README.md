@@ -98,6 +98,8 @@ Tidak perlu `vercel.json`, PHP runtime, `artisan migrate`, atau database di Verc
 
 ## Fitur dan pemeriksaan
 
+- Closing diisi dan ditampilkan sebagai tanggal saja (WIB). Status CLOSED mulai pukul 00.00 WIB hari berikutnya; aturan ini juga berlaku untuk data lama. Penyimpanan tetap memakai `timestamptz` agar kompatibel dengan database yang sudah aktif.
+- Retensi jadwal dijadwalkan melalui `supabase/migrations/202610110001_schedule_retention.sql`: setiap tanggal 1 pukul 07.05 WIB menghapus ETD sebelum awal bulan sebelumnya. Job sudah didaftarkan di Supabase (ID 1); riwayat yang terhapus tidak tersedia lagi di admin. Migration tidak langsung menghapus data saat dijalankan. Pemeriksaan batas tanggal tersedia di `supabase/tests/schedule_retention.sql`.
 - Landing page, gambar, kontak WhatsApp, FAQ, menu mobile, dan interaksi layanan dipertahankan.
 - Supabase Auth untuk login/logout admin. Keanggotaan admin diperiksa di server dan melalui RLS database.
 - Tambah, edit, hapus, status FULL/CLOSED/AVAILABLE, filter kapal/tanggal/status, serta pagination 50 jadwal.

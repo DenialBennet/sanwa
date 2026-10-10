@@ -2,7 +2,10 @@ export type Schedule = {
   id: number; kapal: string; voy: string; closing: string; etd_sub: string; is_full: boolean; updated_at: string;
 };
 export function statusOf(schedule: Pick<Schedule,'is_full'|'closing'>, now = Date.now()) {
-  return schedule.is_full ? 'FULL' : new Date(schedule.closing).getTime() < now ? 'CLOSED' : 'AVAILABLE';
+  return schedule.is_full ? 'FULL' : closingDate(schedule.closing) < closingDate(new Date(now).toISOString()) ? 'CLOSED' : 'AVAILABLE';
+}
+export function closingDate(value:string) {
+  return new Date(new Date(value).getTime()+7*60*60*1000).toISOString().slice(0,10);
 }
 export function dateLabel(value: string, withTime = false) {
   return new Intl.DateTimeFormat('id-ID', { timeZone:'Asia/Jakarta', day:'2-digit',month:'short',year:'numeric', ...(withTime ? {hour:'2-digit',minute:'2-digit'} as const : {}) }).format(new Date(value.length === 10 ? value+'T00:00:00+07:00' : value));
